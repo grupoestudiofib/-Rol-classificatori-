@@ -1,0 +1,70 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+ 
+bool comp(pair<int, string> p1, pair<int, string> p2){
+  if(p1.first > p2.first) return true;
+  else if(p1.first < p2.first) return false;
+  else{
+    if(p1.second >= p2.second) return false;
+    else return true;
+  }
+}
+ 
+int main(){
+  string s;
+  map<string, pair<bool, int> > wannaplaymadafaker;
+  map<string, pair<bool, int> >::iterator it;
+  while(cin >> s){
+    string name;
+    cin >> name;
+    if(s == "LOGIN"){
+      it = wannaplaymadafaker.find(name);
+      if(it == wannaplaymadafaker.end()) wannaplaymadafaker.insert(make_pair(name, make_pair(true, 1200)));
+      else it->second.first = true;
+    }
+   
+    else if(s == "LOGOUT"){
+      it = wannaplaymadafaker.find(name);
+      if(it != wannaplaymadafaker.end()) it->second.first = false;
+    }
+   
+    else if(s == "PLAY"){
+      string name2;
+      cin >> name2;
+      it = wannaplaymadafaker.find(name);
+      map<string, pair<bool, int> >::iterator it2 = wannaplaymadafaker.find(name2);
+      if(it != wannaplaymadafaker.end() and it2 != wannaplaymadafaker.end()){
+    if(it->second.first == true && it2->second.first == true){
+      it->second.second += 10;
+      if(it2->second.second >= 1210) it2->second.second -= 10;
+    }
+    else cout << "jugador(s) no connectat(s)" << endl;
+      }
+      else cout << "jugador(s) no connectat(s)" << endl;
+    }
+   
+    else{
+      cout << name << " " << wannaplaymadafaker.find(name)->second.second << endl;
+    }
+  }
+  cout << endl << "RANKING" << endl;
+  it = wannaplaymadafaker.begin();
+  vector<pair<int, string> > v (wannaplaymadafaker.size());
+  int i=0;
+  while(it != wannaplaymadafaker.end()){
+    v[i].first = it->second.second;
+    v[i].second = it->first;
+    ++i;
+    ++it;
+  }
+  sort(v.begin(), v.end(), comp);
+  int a = v.size();
+  for(int i=0; i<a; ++i){
+    cout << v[i].second << " " << v[i].first << endl;
+  }
+}
+
